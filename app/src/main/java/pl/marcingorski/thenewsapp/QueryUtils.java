@@ -182,8 +182,6 @@ public final class QueryUtils {
                 // Extract the value for the key called "webUrl"
                 String url = currentArticle.getString("webUrl");
 
-                //JSONObject fields = currentArticle.getJSONObject("fields");
-
                 // Extract the value for the key called "author"
                 String author = currentArticle.optString("author");
 

@@ -9,47 +9,47 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class ArticleAdapter extends ArrayAdapter<Article> {
+public class ArticleAdapter extends ArrayAdapter <Article> {
 
     /**
      * Constructs a new {@link ArticleAdapter}.
      *
-     * @param context of the app
+     * @param context  of the app
      * @param articles is the list of articles, which is the data source of the adapter
      */
 
-    public ArticleAdapter(Context context, List<Article> articles) {
-        super(context, 0, articles);
+    public ArticleAdapter(Context context, List <Article> articles) {
+        super ( context, 0, articles );
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View listItemView = convertView;
         if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext ()).inflate (
-                    R.layout.news_list_item, parent, false);
+            listItemView = LayoutInflater.from ( getContext () ).inflate (
+                    R.layout.news_list_item, parent, false );
         }
 
         //Find the article at the given position in the list of articles
-        Article currentArticle = getItem(position);
+        Article currentArticle = getItem ( position );
         // Find all text Views:
         TextView titleOfArticle = listItemView.findViewById ( R.id.title_of_article );
-        titleOfArticle.setText(currentArticle.getTitleOfArticle());
+        titleOfArticle.setText ( currentArticle.getTitleOfArticle () );
 
         TextView section = listItemView.findViewById ( R.id.section );
-        section.setText(currentArticle.getSection());
+        section.setText ( currentArticle.getSection () );
 
         TextView author = listItemView.findViewById ( R.id.author );
-        if(currentArticle.getAuthor().equals("")){
+        if (currentArticle.getAuthor ().equals ( "" )) {
 
-            author.setText( R.string.no_author);
+            author.setText ( R.string.no_author );
 
-        }else {
-            author.setText(currentArticle.getAuthor());
+        } else {
+            author.setText ( currentArticle.getAuthor () );
         }
 
         TextView datePublished = listItemView.findViewById ( R.id.date_of_publish );
-        datePublished.setText(currentArticle.getDatePublished());
+        datePublished.setText ( currentArticle.getDatePublished () );
 
         // Return the list item view that is now showing the appropriate data
         return listItemView;
