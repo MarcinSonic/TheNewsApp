@@ -31,12 +31,25 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         }
 
         //Find the article at the given position in the list of articles
-        Article currentArticle = getItem ( position );
+        Article currentArticle = getItem(position);
         // Find all text Views:
-        TextView titleOfArticle = (TextView) listItemView.findViewById ( R.id.title_of_article );
-        TextView section = (TextView) listItemView.findViewById ( R.id.section );
-        TextView author = (TextView) listItemView.findViewById ( R.id.author );
-        TextView datePublished = (TextView) listItemView.findViewById ( R.id.date_of_publish );
+        TextView titleOfArticle = listItemView.findViewById ( R.id.title_of_article );
+        titleOfArticle.setText(currentArticle.getTitleOfArticle());
+
+        TextView section = listItemView.findViewById ( R.id.section );
+        section.setText(currentArticle.getSection());
+
+        TextView author = listItemView.findViewById ( R.id.author );
+        if(currentArticle.getAuthor().equals("")){
+
+            author.setText( R.string.no_author);
+
+        }else {
+            author.setText(currentArticle.getAuthor());
+        }
+
+        TextView datePublished = listItemView.findViewById ( R.id.date_of_publish );
+        datePublished.setText(currentArticle.getDatePublished());
 
         // Return the list item view that is now showing the appropriate data
         return listItemView;

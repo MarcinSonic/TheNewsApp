@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity
             setContentView ( R.layout.activity_main );
 
             // Find a reference to the {@link ListView} in the layout
-            ListView articleListView = (ListView) findViewById(R.id.list);
+            ListView articleListView = findViewById(R.id.list);
 
-            mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+            mEmptyStateTextView = findViewById(R.id.empty_view);
             articleListView.setEmptyView(mEmptyStateTextView);
 
             // Create a new adapter that takes an empty list of articles as input
