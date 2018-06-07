@@ -212,6 +212,4 @@ public final class QueryUtils {
         // Return the list of articles
         return articles;
     }
-
-
 }
