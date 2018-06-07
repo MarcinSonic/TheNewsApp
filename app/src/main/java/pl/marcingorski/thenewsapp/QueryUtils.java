@@ -1,12 +1,13 @@
 package pl.marcingorski.thenewsapp;
 
 
-import android.content.ContentValues;
 import android.text.TextUtils;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +18,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -25,8 +25,10 @@ import java.util.Locale;
  */
 public final class QueryUtils {
 
-    /** Tag for the log messages */
-    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    /**
+     * Tag for the log messages
+     */
+    private static final String LOG_TAG = QueryUtils.class.getSimpleName ();
 
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
@@ -39,27 +41,27 @@ public final class QueryUtils {
     /**
      * Query the Guardian dataset and return a list of {@link Article} objects.
      */
-    public static List<Article> fetchNewsData(String requestUrl) {
+    public static List <Article> fetchNewsData(String requestUrl) {
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep ( 2000 );
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
 
         // Create URL object
-        URL url = createUrl(requestUrl);
+        URL url = createUrl ( requestUrl );
 
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = null;
         try {
-            jsonResponse = makeHttpRequest(url);
+            jsonResponse = makeHttpRequest ( url );
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+            Log.e ( LOG_TAG, "Problem making the HTTP request.", e );
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link Article}s
-        List<Article> articles = extractFeatureFromJson(jsonResponse);
+        List <Article> articles = extractFeatureFromJson ( jsonResponse );
 
         // Return the list of {@link Article}s
         return articles;
@@ -71,9 +73,9 @@ public final class QueryUtils {
     private static URL createUrl(String stringUrl) {
         URL url = null;
         try {
-            url = new URL(stringUrl);
+            url = new URL ( stringUrl );
         } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Problem building the URL ", e);
+            Log.e ( LOG_TAG, "Problem building the URL ", e );
         }
         return url;
     }
@@ -92,31 +94,31 @@ public final class QueryUtils {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
         try {
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            urlConnection = (HttpURLConnection) url.openConnection ();
+            urlConnection.setReadTimeout ( 10000 /* milliseconds */ );
+            urlConnection.setConnectTimeout ( 15000 /* milliseconds */ );
+            urlConnection.setRequestMethod ( "GET" );
+            urlConnection.connect ();
 
             // If the request was successful (response code 200),
             // then read the input stream and parse the response.
-            if (urlConnection.getResponseCode() == 200) {
-                inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);
+            if (urlConnection.getResponseCode () == 200) {
+                inputStream = urlConnection.getInputStream ();
+                jsonResponse = readFromStream ( inputStream );
             } else {
-                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+                Log.e ( LOG_TAG, "Error response code: " + urlConnection.getResponseCode () );
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the articles JSON results.", e);
+            Log.e ( LOG_TAG, "Problem retrieving the articles JSON results.", e );
         } finally {
             if (urlConnection != null) {
-                urlConnection.disconnect();
+                urlConnection.disconnect ();
             }
             if (inputStream != null) {
                 // Closing the input stream could throw an IOException, which is why
                 // the makeHttpRequest(URL url) method signature specifies than an IOException
                 // could be thrown.
-                inputStream.close();
+                inputStream.close ();
             }
         }
         return jsonResponse;
@@ -127,31 +129,31 @@ public final class QueryUtils {
      * whole JSON response from the server.
      */
     private static String readFromStream(InputStream inputStream) throws IOException {
-        StringBuilder output = new StringBuilder();
+        StringBuilder output = new StringBuilder ();
         if (inputStream != null) {
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
-            BufferedReader reader = new BufferedReader(inputStreamReader);
-            String line = reader.readLine();
+            InputStreamReader inputStreamReader = new InputStreamReader ( inputStream, Charset.forName ( "UTF-8" ) );
+            BufferedReader reader = new BufferedReader ( inputStreamReader );
+            String line = reader.readLine ();
             while (line != null) {
-                output.append(line);
-                line = reader.readLine();
+                output.append ( line );
+                line = reader.readLine ();
             }
         }
-        return output.toString();
+        return output.toString ();
     }
 
     /**
      * Return a list of {@link Article} objects that has been built up from
      * parsing the given JSON response.
      */
-    private static List<Article> extractFeatureFromJson(String newsJSON) {
+    private static List <Article> extractFeatureFromJson(String newsJSON) {
         // If the JSON string is empty or null, then return early.
-        if (TextUtils.isEmpty(newsJSON)) {
+        if (TextUtils.isEmpty ( newsJSON )) {
             return null;
         }
 
         // Create an empty ArrayList that we can start adding articles to
-        List<Article> articles = new ArrayList<>();
+        List <Article> articles = new ArrayList <> ();
 
         // Try to parse the JSON response string. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -159,51 +161,57 @@ public final class QueryUtils {
         try {
 
             // Create a JSONObject from the JSON response string
-            JSONObject baseJsonResponse = new JSONObject(newsJSON);
+            JSONObject baseJsonResponse = new JSONObject ( newsJSON );
 
-            JSONObject response = baseJsonResponse.getJSONObject("response");
-            JSONArray articleArray = response.getJSONArray("results");
+            JSONObject response = baseJsonResponse.getJSONObject ( "response" );
+            JSONArray articleArray = response.getJSONArray ( "results" );
 
-            for (int i = 0; i < articleArray.length(); i++) {
+            for (int i = 0; i < articleArray.length (); i++) {
 
                 // Get a single article at position i within the list of articles
-                JSONObject currentArticle = articleArray.getJSONObject(i);
+                JSONObject currentArticle = articleArray.getJSONObject ( i );
 
 
                 // Extract the value for the key called "webTitle"
-                String titleOfArticle = currentArticle.getString("webTitle");
+                String titleOfArticle = currentArticle.getString ( "webTitle" );
 
                 // Extract the value for the key called "section"
-                String section = currentArticle.getString("sectionName");
+                String section = currentArticle.getString ( "sectionName" );
 
                 // Extract the value for the key called "webPublicationDate"
-                String datePublished = currentArticle.optString("webPublicationDate");
+                String datePublished = currentArticle.optString ( "webPublicationDate" );
 
                 // Extract the value for the key called "webUrl"
-                String url = currentArticle.getString("webUrl");
+                String url = currentArticle.getString ( "webUrl" );
 
-                // Extract the value for the key called "author"
-                String author = currentArticle.optString("author");
+                // Extract Author Array - tags
 
+                JSONArray newsAuthorArray = currentArticle.getJSONArray ( "tags" );
+
+                String author = "Author Unavailable";
+
+                if (newsAuthorArray.length () == 1) {
+                    JSONObject newsAuthorObject = newsAuthorArray.getJSONObject ( 0 );
+                    author = newsAuthorObject.getString ( "webTitle" );
+                }
 
                 // Create a new {@link Article} object from Json response
-                Article article = new Article (titleOfArticle, section, author, datePublished, url);
+                Article article = new Article ( titleOfArticle, section, author, datePublished, url );
 
                 // Add the new {@link Article} to the list of articles.
-                articles.add(article);
+                articles.add ( article );
             }
 
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the articles JSON results", e);
+            Log.e ( "QueryUtils", "Problem parsing the articles JSON results", e );
         }
 
         // Return the list of articles
         return articles;
     }
-
 
 
 }
