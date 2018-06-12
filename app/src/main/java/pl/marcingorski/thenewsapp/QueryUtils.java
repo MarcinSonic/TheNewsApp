@@ -16,8 +16,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -181,6 +186,16 @@ public final class QueryUtils {
                 // Extract the value for the key called "webPublicationDate"
                 String datePublished = currentArticle.optString ( "webPublicationDate" );
 
+                String dateFormated = "";
+                try {
+                    DateFormat dateFromWeb = new SimpleDateFormat ( "yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault () );
+                    Date date = dateFromWeb.parse ( datePublished );
+                    DateFormat readableDate = new SimpleDateFormat ( "HH:mm    dd.MM.yyyy", Locale.getDefault () );
+                    dateFormated = readableDate.format ( date );
+                } catch (ParseException e) {
+                    Log.e ( LOG_TAG, "date formating problem" );
+                }
+
                 // Extract the value for the key called "webUrl"
                 String url = currentArticle.getString ( "webUrl" );
 
@@ -196,7 +211,7 @@ public final class QueryUtils {
                 }
 
                 // Create a new {@link Article} object from Json response
-                Article article = new Article ( titleOfArticle, section, author, datePublished, url );
+                Article article = new Article ( titleOfArticle, section, author, dateFormated, url );
 
                 // Add the new {@link Article} to the list of articles.
                 articles.add ( article );
