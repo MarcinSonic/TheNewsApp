@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings">
+
+    <PreferenceCategory
+        android:summary="Favourites categories"
+        android:title="Choose categories">
+
+        <CheckBoxPreference
+            android:key="business"
+            android:title="@string/business" />
+        <CheckBoxPreference
+            android:key="fashion"
+            android:title="@string/fashion" />
+        <CheckBoxPreference
+            android:key="lifeandstyle"
+            android:title="@string/lifestyle" />
+        <CheckBoxPreference
+            android:key="science"
+            android:title="@string/science" />
+        <CheckBoxPreference
+            android:key="technology"
+            android:title="@string/technology" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

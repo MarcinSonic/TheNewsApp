@@ -3,4 +3,10 @@
     <string name="no_internet_connection">No internet connection.</string>
     <string name="no_articles_found">No articles found</string>
     <string name="no_author">no author</string>
+    <string name="settings">settings</string>
+    <string name="business">Business</string>
+    <string name="fashion">Fashion</string>
+    <string name="lifestyle">Lifestyle</string>
+    <string name="science">Science</string>
+    <string name="technology">Technology</string>
 </resources>

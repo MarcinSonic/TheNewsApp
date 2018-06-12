@@ -5,11 +5,16 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -21,13 +26,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements LoaderCallbacks <List <Article>> {
 
-    private static final String LOG_TAG = MainActivity.class.getName ();
+    public static final String LOG_TAG = MainActivity.class.getName ();
 
     /**
      * URL for news data from Guardian API
      */
     private static final String GUARDIAN_REQUEST_URL =
-            "https://content.guardianapis.com/search?section=technology&show-tags=contributor&show-fields=thumbnail&api-key=test";
+            "https://content.guardianapis.com/search?";
 
     // Constant value for article loader ID.
 
@@ -105,9 +110,48 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public Loader <List <Article>> onCreateLoader(int i, Bundle bundle) {
-        // Create a new loader for the given URL
-        return new ArticleLoader ( this, GUARDIAN_REQUEST_URL );
+    public Loader <List <Article>> onCreateLoader(int i, Bundle args) {
+        // Create url builder
+
+        String TAG = "URI";
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences ( this );
+
+        Boolean business = sharedPreferences.getBoolean ( "business", false );
+        Boolean fashion = sharedPreferences.getBoolean ( "fashion", false );
+        Boolean lifeandstyle = sharedPreferences.getBoolean ( "lifeandstyle", false );
+        Boolean science = sharedPreferences.getBoolean ( "science", false );
+        Boolean technology = sharedPreferences.getBoolean ( "technology", false );
+
+        Uri baseUri = Uri.parse ( GUARDIAN_REQUEST_URL );
+
+        Uri.Builder uriBuilder = baseUri.buildUpon ();
+
+        String sections = "";
+        if (business) {
+            sections += "business|";
+        }
+        if (fashion) {
+            sections += "fashion|";
+        }
+        if (lifeandstyle) {
+            sections += "lifeandstyle|";
+        }
+        if (science) {
+            sections += "science|";
+        }
+        if (technology) {
+            sections += "technology|";
+        }
+        if (sections.endsWith ( "|" )) {
+            sections = sections.substring ( 0, sections.length () - 1 ) + "";
+        }
+        if (!sections.isEmpty ()) {
+            uriBuilder.appendQueryParameter ( "section", sections );
+        }
+        uriBuilder.appendQueryParameter ( "show-tags", "contributor" );
+        uriBuilder.appendQueryParameter ( "api-key", "test" );
+        Log.d ( TAG, "uriBuilder: " + uriBuilder.toString () );
+        return new ArticleLoader ( this, uriBuilder.toString () );
     }
 
     @Override
@@ -133,5 +177,22 @@ public class MainActivity extends AppCompatActivity
     public void onLoaderReset(Loader <List <Article>> loader) {
         // Loader reset, so we can clear out our existing data.
         mAdapter.clear ();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater ().inflate ( R.menu.main, menu );
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId ();
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent ( this, SettingsActivity.class );
+            startActivity ( settingsIntent );
+            return true;
+        }
+        return super.onOptionsItemSelected ( item );
     }
 }

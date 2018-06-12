@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
+        android:textStyle="bold"
         tools:text="Juncker: EU won’t ‘meddle’ in Italy’s affairs" />
 
     <TextView
